@@ -1,0 +1,25 @@
+// To run, change to the top level and run:
+// mvn gatling:execute
+
+package demo
+
+import io.gatling.core.Predef._
+import io.gatling.http.Predef._
+
+class demoSimulation extends Simulation {
+  val http_endpoint = "http://playpen-sdc-frontstage-ui.apps.onsdigital.uk"
+  
+  val users = if(System.getProperty("USERS") != null) System.getProperty("USERS").toInt else 100
+  val ramp_seconds = if(System.getProperty("RAMP_SECONDS") != null) System.getProperty("RAMP_SECONDS").toInt else 10
+
+  println(f"Testing $http_endpoint%s\n")
+
+  val httpProtocol = http.baseURL(http_endpoint)
+
+  val scn = scenario("Simple Test").exec(
+	http("Static Page").get("/mock-pages/dist/login.html").header("Content-Type", "application/html")
+  )
+
+  setUp(scn.inject(rampUsers(users) over(ramp_seconds))).protocols(httpProtocol)
+}
+
