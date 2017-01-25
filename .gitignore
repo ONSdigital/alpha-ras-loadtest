@@ -1,4 +1,5 @@
 *.class
+gatling-loadtest.iml
 .idea/
 *.log
 .DS_Store
